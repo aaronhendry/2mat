@@ -1,0 +1,176 @@
+/*
+ * 2mat/element.hpp -- class definition for the base element for storing data
+ * 
+ * Version: 1.0
+ * Date created: 2021 March 16
+ * Copyright (c) 2021 Aaron Hendry
+ * 
+ * This program is free software: you can redistribute it and/or modify it under the terms of the
+ * GNU Lesser General Public License as published by the Free Software Foundation, either version 3
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License along with this program.
+ * If not, see <https://www.gnu.org/licenses/>.
+ */
+
+#ifndef TOO_MAT_ELEMENT_H
+#define TOO_MAT_ELEMENT_H
+
+#include "types.hpp"
+
+#include <cstring>
+#include <vector>
+#include <string>
+#include <algorithm>
+#include <ostream>
+
+namespace mat
+{
+
+    class element
+    {
+        datatype _type;
+        std::string _name;
+        std::vector<unsigned char> _data;
+
+    public:
+        /*
+         * mat::element::element(const std::string &)
+         * 
+         * Constructs an empty data element with the specified name. This is typically used if the
+         * parent object is managing the data itself (or if an empty element is needed for some
+         * reason. For these empty elements, the datatype is set to DOUBLE, but this can be
+         * overridden by the parent class.
+         * 
+         * INPUT:
+         *  name (const str::string &) the name of the new element
+         */
+		element(const std::string &name);
+
+        /*
+         * mat::element::element(const std::string &, NT, NT)
+         * 
+         * Constructs a data element using the passed pointer-like arguments. Data is deep-copied 
+         * from the passed pointers.
+         * 
+         * TEMPLATE
+         *  T   The type of the value obtained when dereferencing an argument of type NT
+         *  NT  A pointer-like value (e.g., a pointer or iterator)
+         * INPUT:
+         *  name (const str::string &) the name of the new element
+         *  start (NT) a pointer to the start of the data to copy
+         *  end (NT) a pointer to the end of the data to copy
+         */
+        template <typename T, typename NT>
+		element(const std::string &name, NT start, NT end);
+
+        /*
+         * mat::element::element(const std::string &, T *, dim_t)
+         * 
+         * Constructs a data element from the passed point. Data is deep-copied -- the total number
+         * of bytes copied will be sizeof(T)*numel.
+         * 
+         * TEMPLATE
+         *  T   The type of the data to copy
+         * INPUT:
+         *  name (const str::string &) the name of the new element
+         *  data (T *) a pointer to the start of the data to copy
+         *  numel (dim_t) the number of elements to copy
+         */
+        template <typename T>
+		element(const std::string &name, T *data, dim_t numel);
+
+        /*
+         * mat::element::element(const std::string &, const std::string &)
+         * 
+         * Constructs a data element from the passed string. In keeping with MATLAB format, the data
+         * will be stored as an unsigned 16-bit integer. 
+         * 
+         * INPUT:
+         *  name (const str::string &) the name of the new element
+         *  str (const std::string &) the string to construct the element from
+         */
+        element(const std::string &name, const std::string &str);
+
+        /*
+         * mat::element::element(const std::string &, const std::u16string &)
+         * 
+         * Constructs a data element from the passed UTF-16 string. 
+         * 
+         * INPUT:
+         *  name (const str::string &) the name of the new element
+         *  start (const std::u16string &) the string to construct the element from
+         */
+        element(const std::string &name, const std::u16string &str);
+
+        /*
+         * mat::element::element(const std::string &, const std::u32string &)
+         * 
+         * Constructs a data element from the passed UTF-32 string. 
+         * 
+         * INPUT:
+         *  name (const str::string &) the name of the new element
+         *  start (const std::u32string &) the string to construct the element from
+         */
+        element(const std::string &name, const std::u32string &str);
+		virtual ~element() = 0;
+
+        /*
+         * const std::string &mat::element::name() const
+         * 
+         * Returns the name of the element
+         * 
+         * RETURN:
+         *  The name of this element
+         */
+        const std::string &name() const;
+
+        /*
+         * datatype mat::element::type() const
+         * 
+         * Returns the MATLAB datatype contained in this element
+         * 
+         * RETURN:
+         *  The name of this element
+         */
+        datatype type() const;
+
+        /*
+         * void mat::element::write(std::ostream& out, file_version v)
+         * 
+         * Writes the data in this element to the given output stream, in accordance with the file
+         * version specified.
+         * 
+         * INPUT:
+         *  out (std::ostream &) the stream to output the binary data to
+         *  v (file_version) the file format to use
+         */
+        virtual void write(std::ostream& out, file_version v) = 0;
+
+    };
+
+    template <typename T, typename NT>
+    element::element(const std::string &name, NT start, NT end)
+    :
+        _type(get_datatype<T>()),
+        _name(name),
+        _data((end-start)*sizeof(T))
+    {
+        T *dest = (T *)&_data[0];
+        std::copy(start,end,dest);
+    }
+
+    template <typename T>
+    element::element(const std::string &name, T *data, dim_t numel)
+    :
+        element<T>(name,data,data+numel)
+    {}
+
+
+}
+
+#endif
