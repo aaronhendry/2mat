@@ -40,13 +40,94 @@ namespace mat
     class matrix : public element
     {
     private:
+        std::vector<dim_t> dims;
 
         template <file_version V>
         void write(std::ostream& out);
-    public:
-        // The matrix is basically a thin wrapper around a data-element, so we just re-use the 
-        // constructors from element
-        using element::element;
+    public:        
+        /*
+         * mat::matrix::matrix(const std::string &)
+         * 
+         * Constructs an empty data element with the specified name. This is typically used if the
+         * parent object is managing the data itself (or if an empty element is needed for some
+         * reason. For these empty elements, the datatype is set to DOUBLE, but this can be
+         * overridden by the parent class.
+         * 
+         * INPUT:
+         *  name (const str::string &) the name of the new element
+         */
+		matrix(const std::string &name);
+
+        /*
+         * mat::matrix::matrix(const std::string &, NT, NT)
+         * 
+         * Constructs a data element using the passed pointer-like arguments. Data is deep-copied 
+         * from the passed pointers. The dimensions of this matrix can be explicity specified, but
+         * the elements of the dims vector must be commensurate with the number of elements in the
+         * matrix. If dims is not specified, the matrix will be a 1D row vector.
+         * 
+         * TEMPLATE
+         *  T   The type of the value obtained when dereferencing an argument of type NT
+         *  NT  A pointer-like value (e.g., a pointer or iterator)
+         * INPUT:
+         *  name (const str::string &) the name of the new element
+         *  start (NT) a pointer to the start of the data to copy
+         *  end (NT) a pointer to the end of the data to copy
+         */
+        template <typename T, typename NT>
+		matrix(const std::string &name, NT start, NT end, const std::vector<dim_t> dims = {});
+
+        /*
+         * mat::matrix::matrix(const std::string &, T *, dim_t)
+         * 
+         * Constructs a data element from the passed point. Data is deep-copied -- the total number
+         * of bytes copied will be sizeof(T)*numel. The dimensions of this matrix can be explicity
+         * specified, but the elements of the dims vector must be commensurate with the number of
+         * elements in the matrix. If dims is not specified, the matrix will be a 1D row vector.
+         * 
+         * TEMPLATE
+         *  T   The type of the data to copy
+         * INPUT:
+         *  name (const str::string &) the name of the new element
+         *  data (T *) a pointer to the start of the data to copy
+         *  numel (dim_t) the number of elements to copy
+         */
+        template <typename T>
+		matrix(const std::string &name, T *data, dim_t numel, const std::vector<dim_t> dims = {});
+
+        /*
+         * mat::matrix::matrix(const std::string &, const std::string &)
+         * 
+         * Constructs a data element from the passed string. In keeping with MATLAB format, the data
+         * will be stored as an unsigned 16-bit integer. 
+         * 
+         * INPUT:
+         *  name (const str::string &) the name of the new element
+         *  str (const std::string &) the string to construct the element from
+         */
+        matrix(const std::string &name, const std::string &str);
+
+        /*
+         * mat::matrix::matrix(const std::string &, const std::u16string &)
+         * 
+         * Constructs a data element from the passed UTF-16 string. 
+         * 
+         * INPUT:
+         *  name (const str::string &) the name of the new element
+         *  start (const std::u16string &) the string to construct the element from
+         */
+        matrix(const std::string &name, const std::u16string &str);
+
+        /*
+         * mat::matrix::matrix(const std::string &, const std::u32string &)
+         * 
+         * Constructs a data element from the passed UTF-32 string. 
+         * 
+         * INPUT:
+         *  name (const str::string &) the name of the new element
+         *  start (const std::u32string &) the string to construct the element from
+         */
+        matrix(const std::string &name, const std::u32string &str);
         ~matrix() = default;
 
         /*
