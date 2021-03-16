@@ -31,33 +31,21 @@ namespace mat
 
     element::element(const std::string &name, const std::string &str)
     :
-        _name(name)
+        _name(name),
+        _type(miUTF8)
     {
+
         // MATLAB stores strings in a slightly strange way. In theory, it saves strings in UTF-8
         // format. However in practise, it converts the string to a series of UINT16_T values based
         // on the UTF-8 code points. This means that, for instance, the character 'ん' cannot be
         // saved in a "normal" MATLAB single-quote string. This is because the unicode code point
-        // for the 'ん' character is 0xE38293, which is 3-bytes long. This means that when we 
-        // receive a string intended to be written to a MATLAB file, we have to check to see if 
-        // there are any 3- or 4-byte characters in the string. In practise, this means checking to
-        // see if there are any bytes in the string with a value over 0xE0, which is the indicator
-        // of a three-byte code point. This will catch both 3- and 4-byte code points.
-        uint8_t max = *std::max_element(str.begin(),str.end());
-        if (max > 0xE0)
-        {
-            // The easy work-around is to treat non-conforming strings as UTF-16 strings. This will
-            // not work if we are saving to V6 format. This is actually not _strictly_ true, as 
-            // MATLAB will still load these files, however it is likely that this would break on
-            // older version of MATLAB.
-            _type = miUTF16;
-            std::memcpy(&_data[0],&str[0],str.size());
-        } else {
-            // Because a C++ string might have UTF code-points, for default MATLAB type strings we
-            // can't do a simple memcpy to copy the data, as we need to convert _every_ character to
-            // a UINT16_T value (even those that fit within a single byte).
-            uint16_t *ptr = (uint16_t *)&_data[0];
-            for (char c : str) *ptr++ = (uint16_t) c;
-        }
+        // for the 'ん' character is 0xE38293, which is 3-bytes long.
+        
+        // In practise, it is simply easier to treat *all* strings as UTF-8. MATLAB has no trouble
+        // reading these on any version newer than 2004, and it greatly simplifies this process.
+        // I have made the decision to not support 17-year old version of MATLAB for my own sanity.
+        _data = std::make_shared<std::vector<unsigned char>>(str.size());
+        std::memcpy(ptr(),&str[0],str.size());
     }
 
     element::element(const std::string &name, const std::u16string &str)
@@ -65,9 +53,10 @@ namespace mat
         _name(name),
         _type(miUTF16)
     {
+        _data = std::make_shared<std::vector<unsigned char>>(str.size()*2);
         // For explicitly UTF-16 strings, we can simply copy them as is -- the MATLAB UTF-16 type 
         // will deal with them properly.
-        std::memcpy(&_data[0],&str[0],str.size());
+        std::memcpy(ptr(),&str[0],str.size());
     }
     
 
@@ -76,9 +65,10 @@ namespace mat
         _name(name),
         _type(miUTF32)
     {
+        _data = std::make_shared<std::vector<unsigned char>>(str.size()*4);
         // For explicitly UTF-32 strings, we can simply copy them as is -- the MATLAB UTF-32 type 
         // will deal with them properly.
-        std::memcpy(&_data[0],&str[0],str.size());
+        std::memcpy(ptr(),&str[0],str.size());
     }
 
     const std::string &element::name() const

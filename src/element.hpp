@@ -27,6 +27,7 @@
 #include <string>
 #include <algorithm>
 #include <ostream>
+#include <memory>
 
 namespace mat
 {
@@ -35,7 +36,10 @@ namespace mat
     {
         datatype _type;
         std::string _name;
-        std::vector<unsigned char> _data;
+        std::shared_ptr<std::vector<unsigned char>> _data;
+
+        template <typename T=unsigned char>
+        T *ptr();
 
     public:
         /*
@@ -153,14 +157,20 @@ namespace mat
 
     };
 
+    template <typename T>
+    T *element::ptr()
+    {
+        return !_data ? NULL : (T *)&_data->at(0);
+    }
+
     template <typename T, typename NT>
     element::element(const std::string &name, NT start, NT end)
     :
         _type(get_datatype<T>()),
-        _name(name),
-        _data((end-start)*sizeof(T))
+        _name(name)
     {
-        T *dest = (T *)&_data[0];
+        _data = std::make_shared<std::vector<unsigned char>>((end-start)*sizeof(T));
+        T *dest = ptr<T>();
         std::copy(start,end,dest);
     }
 
