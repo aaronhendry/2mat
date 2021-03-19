@@ -20,13 +20,13 @@
 #ifndef TOO_MAT_ELEMENT_H
 #define TOO_MAT_ELEMENT_H
 
+#include "io/fwriter.hpp"
 #include "types.hpp"
 
 #include <cstring>
 #include <vector>
 #include <string>
 #include <algorithm>
-#include <ostream>
 #include <memory>
 
 namespace mat
@@ -34,6 +34,7 @@ namespace mat
 
     class element
     {
+    protected:
         datatype _type;
         std::string _name;
         std::shared_ptr<std::vector<unsigned char>> _data;
@@ -69,7 +70,7 @@ namespace mat
          *  start (NT) a pointer to the start of the data to copy
          *  end (NT) a pointer to the end of the data to copy
          */
-        template <typename T, typename NT>
+        template <typename NT>
 		element(const std::string &name, NT start, NT end);
 
         /*
@@ -121,7 +122,7 @@ namespace mat
          *  start (const std::u32string &) the string to construct the element from
          */
         element(const std::string &name, const std::u32string &str);
-		virtual ~element() = 0;
+		virtual ~element() = default;
 
         /*
          * const std::string &mat::element::name() const
@@ -153,7 +154,7 @@ namespace mat
          *  out (std::ostream &) the stream to output the binary data to
          *  v (file_version) the file format to use
          */
-        virtual void write(std::ostream& out, file_version v) = 0;
+        virtual void write(fwriter &fw, file_version v) = 0;
 
     };
 
@@ -163,21 +164,21 @@ namespace mat
         return !_data ? NULL : (T *)&_data->at(0);
     }
 
-    template <typename T, typename NT>
+    template <typename NT>
     element::element(const std::string &name, NT start, NT end)
     :
-        _type(get_datatype<T>()),
+        _type(get_datatype(*start)),
         _name(name)
     {
-        _data = std::make_shared<std::vector<unsigned char>>((end-start)*sizeof(T));
-        T *dest = ptr<T>();
-        std::copy(start,end,dest);
+        dim_t n = (end-start)*sizeof(*start);
+        _data = std::make_shared<std::vector<unsigned char>>(n);
+        std::memcpy(ptr(),&(*start),n);
     }
 
     template <typename T>
     element::element(const std::string &name, T *data, dim_t numel)
     :
-        element<T>(name,data,data+numel)
+        element(name,data,data+numel)
     {}
 
 

@@ -24,15 +24,15 @@ namespace mat
 
     element::element(const std::string &name)
     :
-        _name(name),
         _type(miDOUBLE),
+        _name(name),
         _data()
     {}
 
     element::element(const std::string &name, const std::string &str)
     :
-        _name(name),
-        _type(miUTF8)
+        _type(miUTF8),
+        _name(name)
     {
 
         // MATLAB stores strings in a slightly strange way. In theory, it saves strings in UTF-8
@@ -50,8 +50,8 @@ namespace mat
 
     element::element(const std::string &name, const std::u16string &str)
     :
-        _name(name),
-        _type(miUTF16)
+        _type(miUTF16),
+        _name(name)
     {
         _data = std::make_shared<std::vector<unsigned char>>(str.size()*2);
         // For explicitly UTF-16 strings, we can simply copy them as is -- the MATLAB UTF-16 type 
@@ -62,8 +62,8 @@ namespace mat
 
     element::element(const std::string &name, const std::u32string &str)
     :
-        _name(name),
-        _type(miUTF32)
+        _type(miUTF32),
+        _name(name)
     {
         _data = std::make_shared<std::vector<unsigned char>>(str.size()*4);
         // For explicitly UTF-32 strings, we can simply copy them as is -- the MATLAB UTF-32 type 
