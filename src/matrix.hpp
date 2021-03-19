@@ -21,10 +21,12 @@
 #define TOO_MAT_MATRIX_H
 
 #include "element.hpp"
+#include "util.hpp"
 
 #include <vector>
 #include <string>
 #include <algorithm>
+#include <initializer_list>
 
 namespace mat
 {
@@ -40,10 +42,13 @@ namespace mat
     class matrix : public element
     {
     private:
-        std::vector<dim_t> dims;
+        array_class _class;
+        std::vector<dim_t> _dims;
+        bool _logical;
+        bool _complex;
 
         template <file_version V>
-        void write(std::ostream& out);
+        void write(fwriter& fw);
     public:        
         /*
          * mat::matrix::matrix(const std::string &)
@@ -74,7 +79,7 @@ namespace mat
          *  start (NT) a pointer to the start of the data to copy
          *  end (NT) a pointer to the end of the data to copy
          */
-        template <typename T, typename NT>
+        template <typename NT>
 		matrix(const std::string &name, NT start, NT end, const std::vector<dim_t> dims = {});
 
         /*
@@ -94,6 +99,9 @@ namespace mat
          */
         template <typename T>
 		matrix(const std::string &name, T *data, dim_t numel, const std::vector<dim_t> dims = {});
+
+        template <typename T>
+		matrix(const std::string &name, std::initializer_list<T> data, const std::vector<dim_t> dims = {});
 
         /*
          * mat::matrix::matrix(const std::string &, const std::string &)
@@ -140,26 +148,37 @@ namespace mat
          *  out (std::ostream &) the stream to output the binary data to
          *  v (file_version) the file format to use
          */
-        virtual inline void write(std::ostream& out, file_version v)
-        {
-            switch(v)
-            {
-                case V4:
-                    write<V4>(out);
-                    return;
-                case V6:
-                    write<V6>(out);
-                    return;
-                case V7:
-                    write<V7>(out);
-                    return;
-                case V7_3:
-                    write<V7_3>(out);
-                    return;
-            }
-        }
+        virtual void write(fwriter &fw, file_version v);
 
     };
+
+    template <typename NT>
+    matrix::matrix(const std::string &name, NT start, NT end, const std::vector<dim_t> dims)
+    :
+        element(name,start,end),
+        _class(get_class(*start)),
+        _dims(dims.empty() ? std::vector<dim_t>{1ull,(dim_t)(end-start)} : dims),
+        _logical(false),
+        _complex(false)
+    {
+        double prod = 1;
+        for (auto d : _dims) prod *= d;
+        if (prod != end-start)
+            throw mfile_error("Matrix dimensions must be commensurate with number of elements.");
+    }
+
+    template <typename T>
+    matrix::matrix(const std::string &name, T *data, dim_t numel, const std::vector<dim_t> dims)
+    :
+        matrix(name,data,data+numel,dims)
+    {}
+
+    template <typename T>
+    matrix::matrix(const std::string &name, std::initializer_list<T> data,
+        const std::vector<dim_t> dims)
+    :
+        matrix(name,data.begin(),data.end(),dims)
+    {}
 
 }
 
