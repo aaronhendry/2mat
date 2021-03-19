@@ -1,0 +1,90 @@
+/*
+ * 2mat/matrix.cpp -- partial class implementation for matrix.hpp
+ * 
+ * Version: 1.0
+ * Date created: 2021 March 17
+ * Copyright (c) 2021 Aaron Hendry
+ * 
+ * This program is free software: you can redistribute it and/or modify it under the terms of the
+ * GNU Lesser General Public License as published by the Free Software Foundation, either version 3
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License along with this program.
+ * If not, see <https://www.gnu.org/licenses/>.
+ */
+
+#include "matrix.hpp"
+
+namespace mat
+{
+
+    matrix::matrix(const std::string &name)
+    :
+        element(name),
+        _class(mxDOUBLE_CLASS),
+        _dims({0,0}),
+        _logical(false),
+        _complex(false)
+    {}
+
+    template <>
+    matrix::matrix(const std::string &name, std::initializer_list<char> data,
+        const std::vector<dim_t> dims)
+    :
+        matrix(name,data.begin(),data.end(),dims)
+    {}
+
+    dim_t utflen(const std::string &str)
+    {
+        int len = 0;
+        const char *s = &str[0];
+        while (*s) len += (*s++ & 0xc0) != 0x80;
+        return len;
+    }
+
+    matrix::matrix(const std::string &name, const std::string &str)
+    :
+        element(name,str),
+        _class(mxCHAR_CLASS),
+        _dims(std::vector<dim_t>{1ull,(dim_t)(utflen(str))}),
+        _logical(false),
+        _complex(false)
+    {}
+    matrix::matrix(const std::string &name, const std::u16string &str)
+    :
+        element(name,str),
+        _class(mxCHAR_CLASS),
+        _dims(std::vector<dim_t>{1ull,(dim_t)(str.size())}),
+        _logical(false),
+        _complex(false)
+    {}
+    matrix::matrix(const std::string &name, const std::u32string &str)
+    :
+        element(name,str),
+        _class(mxCHAR_CLASS),
+        _dims(std::vector<dim_t>{1ull,(dim_t)(str.size())}),
+        _logical(false),
+        _complex(false)
+    {}
+
+    void matrix::write(fwriter& fw, file_version v)
+    {
+        switch(v)
+        {
+            case V6:
+                write<V6>(fw);
+                return;
+            case V7:
+                write<V7>(fw);
+                return;
+            case V7_3:
+                write<V7_3>(fw);
+                return;
+        }
+    }
+
+}
