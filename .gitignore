@@ -48,3 +48,5 @@ build/*
 ### CMake Patch ###
 # External projects
 *-prefix/
+
+.gdb_history
