@@ -34,6 +34,8 @@ namespace mat
 		mstruct(std::string name);
 		~mstruct();
 
+        //TODO: Add struct methods
+
         /*
          * void mat::matrix::write(std::ostream& out, file_version v)
          * 
