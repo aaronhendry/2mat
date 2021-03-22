@@ -17,6 +17,7 @@
  * If not, see <https://www.gnu.org/licenses/>.
  */
 
+#include "../io/fwriter.hpp"
 #include "../2mat.hpp"
 #include "../matrix.hpp"
 #include "../mstruct.hpp"
