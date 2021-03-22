@@ -18,7 +18,7 @@
  */
 
 #include "../io/fwriter.hpp"
-#include "../2mat.hpp"
+#include "../file.hpp"
 #include "../matrix.hpp"
 #include "../mstruct.hpp"
 #include "../util.hpp"

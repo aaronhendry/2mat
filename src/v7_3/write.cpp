@@ -17,7 +17,7 @@
  * If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "../2mat.hpp"
+#include "../file.hpp"
 #include "../matrix.hpp"
 #include "../mstruct.hpp"
 #include "../util.hpp"
