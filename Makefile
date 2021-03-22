@@ -12,7 +12,7 @@ SRC_DIR=src
 SRC_SUBDIR= v4 v6 v7 v7_3 io
 
 # Source files from the source directory
-LIB_CPP_FILE = container.cpp element.cpp matrix.cpp mstruct.cpp util.cpp \
+LIB_CPP_FILE = container.cpp element.cpp matrix.cpp mstruct.cpp util.cpp datenum.cpp\
 	v6/write.cpp v7/write.cpp v7_3/write.cpp io/fwriter.cpp
 LIB_SRCS = $(addprefix $(SRC_DIR)/,$(LIB_CPP_FILE))
 
@@ -21,7 +21,7 @@ LIB_FILE = $(LIB_DIR)/lib2mat.a
 
 # The files to install in the include directory
 HEAD_FILES = util.hpp types.hpp mstruct.hpp matrix.hpp element.hpp datenum.hpp container.hpp \
-	2mat.hpp
+	file.hpp
 INST_SRC = $(addprefix $(SRC_DIR)/,$(HEAD_FILES))
 INST_FILES = $(addprefix $(INST_DIR)/,$(HEAD_FILES))
 
