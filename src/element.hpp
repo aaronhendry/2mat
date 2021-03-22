@@ -20,7 +20,6 @@
 #ifndef TOO_MAT_ELEMENT_H
 #define TOO_MAT_ELEMENT_H
 
-#include "io/fwriter.hpp"
 #include "types.hpp"
 
 #include <cstring>
@@ -31,6 +30,8 @@
 
 namespace mat
 {
+
+    class fwriter;
 
     class element
     {
