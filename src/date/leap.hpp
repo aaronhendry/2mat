@@ -17,7 +17,7 @@
  * If not, see <https://www.gnu.org/licenses/>.
  */
 
-const int LEAP_JD[27] =
+const double LEAP_JD[27] =
 {
     2457753.5,
     2457203.5,
