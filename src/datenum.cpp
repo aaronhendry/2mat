@@ -75,7 +75,7 @@ namespace mat
         int doy = months[m-1]+d;    
         // Efficiently determines if y represents a leap year. see:
         // https://stackoverflow.com/a/11595914
-        return months[m-1] + (m>2 && ((y & 3) && (!(y % 25) || (y & 15))));
+        return doy + (m>2 && ((y & 3) && (!(y % 25) || (y & 15))));
     }
 
     double julian(int y, int m, int d, int H, int M, double S)
@@ -115,6 +115,7 @@ namespace mat
     {
         return 719529.0 + s/86400.0;
     }
+    
     double j19002dn(double j)
     {
         return j + 2415020.0 - 1721058.5;

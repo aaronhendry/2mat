@@ -17,6 +17,9 @@
  * If not, see <https://www.gnu.org/licenses/>.
  */
 
+#ifndef TOO_MAT_DATENUM_H
+#define TOO_MAT_DATENUM_H
+
 namespace mat
 {
 
@@ -107,10 +110,7 @@ namespace mat
      * RETURN:
      *  the MATLAB datenum
      */
-    double j19002dn(double j)
-    {
-
-    }
+    double j19002dn(double j);
     
     /*
      * double mat::j20002dn(double s)
@@ -150,3 +150,5 @@ namespace mat
      */
     double tt20002dn(long long tt);
 }
+
+#endif
