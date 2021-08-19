@@ -91,10 +91,12 @@ namespace mat
         do
         {
             memcpy(bptr,data+off,avail);
+            bptr = bend;
             off += avail;
             compress(false);
         } while(bytes-off > avail);
         memcpy(bptr,data+off,bytes-off);
+        bptr += bytes-off;
         return bytes;
     }
 
