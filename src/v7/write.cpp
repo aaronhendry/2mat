@@ -95,6 +95,7 @@ namespace mat
     template <>
     void file<V7>::close()
     {
+        if (_children.empty()) return;
         fwriter fw(_name);
         fw.write(create_header(head));
         fw.write<uint64_t>(0); // subsys offset
