@@ -78,9 +78,9 @@ namespace mat
          *  end (NT) the pointer to the end of the range to add
          *  dims (const std::vector<dim_t> &) the dimensions of the matrix
          */
-        template <typename NT>
+        template <typename NT, typename dimtype=dim_t>
 		container &add(const std::string &name, NT start, NT end, 
-            const std::vector<dim_t> &dims = {});
+            const std::vector<dimtype> &dims = {});
 
         /*
          * mat::container::add(const std::string &, T *, dim_t, const std::vector<dim_t>)
@@ -96,13 +96,13 @@ namespace mat
          *  numel (NT) the number of elements to add from the pass array
          *  dims (const std::vector<dim_t> &) the dimensions of the matrix
          */
-        template <typename T>
+        template <typename T, typename dimtype=dim_t>
 		container &add(const std::string &name, T *data, dim_t numel, 
-            const std::vector<dim_t> &dims = {});
+            const std::vector<dimtype> &dims = {});
 
-        template <typename T>
+        template <typename T, typename dimtype=dim_t>
 		container &add(const std::string &name, std::initializer_list<T> data, 
-            const std::vector<dim_t> dims = {});
+            const std::vector<dimtype> dims = {});
 
         /*
          * mat::container::add(const std::string &, T *, dim_t, const std::vector<dim_t>)
@@ -152,25 +152,25 @@ namespace mat
         return *this;
     }
 
-    template <typename NT>
+    template <typename NT, typename dimtype>
     container &container::add(const std::string &name, NT start, NT end, 
-            const std::vector<dim_t> &dims)
+            const std::vector<dimtype> &dims)
     {
         add(matrix(name,start,end,dims));
         return *this;
     }
 
-    template <typename T>
+    template <typename T, typename dimtype>
     container &container::add(const std::string &name, T *data, dim_t numel, 
-            const std::vector<dim_t> &dims)
+            const std::vector<dimtype> &dims)
     {
         add(matrix(name,data,numel,dims));
         return *this;
     }
 
-    template <typename T>
+    template <typename T, typename dimtype>
     container &container::add(const std::string &name, std::initializer_list<T> data, 
-        const std::vector<dim_t> dims)
+        const std::vector<dimtype> dims)
     {
         add(matrix(name,data,dims));
         return *this;
