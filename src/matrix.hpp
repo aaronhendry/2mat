@@ -79,8 +79,8 @@ namespace mat
          *  start (NT) a pointer to the start of the data to copy
          *  end (NT) a pointer to the end of the data to copy
          */
-        template <typename NT>
-		matrix(const std::string &name, NT start, NT end, const std::vector<dim_t> dims = {});
+        template <typename NT, typename dimtype=dim_t>
+		matrix(const std::string &name, NT start, NT end, const std::vector<dimtype> dims = {});
 
         /*
          * mat::matrix::matrix(const std::string &, T *, dim_t)
@@ -97,11 +97,11 @@ namespace mat
          *  data (T *) a pointer to the start of the data to copy
          *  numel (dim_t) the number of elements to copy
          */
-        template <typename T>
-		matrix(const std::string &name, T *data, dim_t numel, const std::vector<dim_t> dims = {});
+        template <typename T, typename dimtype=dim_t>
+		matrix(const std::string &name, T *data, dim_t numel, const std::vector<dimtype> dims = {});
 
-        template <typename T>
-		matrix(const std::string &name, std::initializer_list<T> data, const std::vector<dim_t> dims = {});
+        template <typename T, typename dimtype=dim_t>
+		matrix(const std::string &name, std::initializer_list<T> data, const std::vector<dimtype> dims = {});
 
         /*
          * mat::matrix::matrix(const std::string &, const std::string &)
@@ -152,12 +152,14 @@ namespace mat
 
     };
 
-    template <typename NT>
-    matrix::matrix(const std::string &name, NT start, NT end, const std::vector<dim_t> dims)
+    template <typename NT, typename dimtype>
+    matrix::matrix(const std::string &name, NT start, NT end, const std::vector<dimtype> dims)
     :
         element(name,start,end),
         _class(get_class(*start)),
-        _dims(dims.empty() ? std::vector<dim_t>{1ull,(dim_t)(end-start)} : dims),
+        _dims(dims.empty() 
+            ? std::vector<dim_t>{1ull,(dim_t)(end-start)}
+            : std::vector<dim_t>(dims.begin(),dims.end())),
         _logical(false),
         _complex(false)
     {
@@ -167,15 +169,15 @@ namespace mat
             throw mfile_error("Matrix dimensions must be commensurate with number of elements.");
     }
 
-    template <typename T>
-    matrix::matrix(const std::string &name, T *data, dim_t numel, const std::vector<dim_t> dims)
+    template <typename T, typename dimtype>
+    matrix::matrix(const std::string &name, T *data, dim_t numel, const std::vector<dimtype> dims)
     :
         matrix(name,data,data+numel,dims)
     {}
 
-    template <typename T>
+    template <typename T, typename dimtype>
     matrix::matrix(const std::string &name, std::initializer_list<T> data,
-        const std::vector<dim_t> dims)
+        const std::vector<dimtype> dims)
     :
         matrix(name,data.begin(),data.end(),dims)
     {}
