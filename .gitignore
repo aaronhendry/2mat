@@ -4,6 +4,7 @@ inc/*
 lib/*
 build/*
 .vscode/*
+.idea/*
 
 ### C++ ###
 # Prerequisites
@@ -48,5 +49,6 @@ build/*
 ### CMake Patch ###
 # External projects
 *-prefix/
+cmake-build*
 
 .gdb_history
