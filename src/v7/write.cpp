@@ -17,17 +17,14 @@
  * If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "../io/fwriter.hpp"
-#include "../file.hpp"
-#include "../matrix.hpp"
-#include "../mstruct.hpp"
-#include "../util.hpp"
+#include "io/fwriter.hpp"
+#include "file.hpp"
+#include "matrix.hpp"
+#include "util.hpp"
 
-#include <cmath>
 #include <fstream>
 #include <sstream>
-#include <time.h>
-#include <cstdio>
+#include <ctime>
 
 namespace mat
 {

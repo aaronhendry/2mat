@@ -17,7 +17,7 @@
  * If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "fwriter.hpp"
+#include "io/fwriter.hpp"
 #include <cstring>
 
 namespace mat

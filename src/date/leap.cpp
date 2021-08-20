@@ -17,6 +17,8 @@
  * If not, see <https://www.gnu.org/licenses/>.
  */
 
+#include "date/leap.hpp"
+
  namespace mat
  {
      const double LEAP_JD[27] =

@@ -17,15 +17,15 @@
  * If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "../file.hpp"
-#include "../matrix.hpp"
-#include "../mstruct.hpp"
-#include "../util.hpp"
+#include "file.hpp"
+#include "matrix.hpp"
+#include "mstruct.hpp"
+#include "util.hpp"
 
 #include <cmath>
 #include <fstream>
 #include <sstream>
-#include <time.h>
+#include <ctime>
 
 namespace mat
 {
