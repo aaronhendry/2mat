@@ -148,12 +148,12 @@ namespace mat
         if (!fptr) throw mfile_error("Cannot write to closed file");
         if (std::is_same<T,U>::value)
         {
-            for (uint i = 0; i < n; ++i)
+            for (unsigned int i = 0; i < n; ++i)
                 filt->write((unsigned char *)&val,sizeof(T));
             return n*sizeof(T);
         }
         U uval = (U)val;
-        for (uint i = 0; i < n; ++i)
+        for (unsigned int i = 0; i < n; ++i)
             filt->write((unsigned char *)&uval,sizeof(U));
         return n*sizeof(U);
     }
@@ -167,7 +167,7 @@ namespace mat
             return filt->write((unsigned char *)ptr,n*sizeof(T));
         }
         U val;
-        for (uint i = 0; i < n; ++i)
+        for (unsigned int i = 0; i < n; ++i)
         {
             val = (U)ptr[i];
             filt->write((unsigned char *)&val,sizeof(U));
