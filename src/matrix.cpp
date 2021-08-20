@@ -33,7 +33,7 @@ namespace mat
 
     template <>
     matrix::matrix(const std::string &name, std::initializer_list<char> data,
-        const std::vector<dim_t> dims)
+        const std::vector<dim_t> &dims)
     :
         matrix(name,data.begin(),data.end(),dims)
     {}

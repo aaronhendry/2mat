@@ -46,7 +46,7 @@ namespace mat
          *  out (std::ostream &) the stream to output the binary data to
          *  v (file_version) the file format to use
          */
-        virtual inline void write(fwriter& fw, file_version v)
+        inline void write(fwriter& fw, file_version v) override
         {
             switch(v)
             {

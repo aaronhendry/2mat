@@ -59,7 +59,7 @@ namespace mat
     protected:
         FILE *fptr;
     public:
-        filter(FILE *file);
+        explicit filter(FILE *file);
         virtual ~filter() = default;
 
         virtual dim_t write(const unsigned char *data, dim_t bytes) = 0;
@@ -69,11 +69,11 @@ namespace mat
     class nofilter : public filter
     {
     public:
-        nofilter(FILE *file);
-        virtual ~nofilter() = default;
+        explicit nofilter(FILE *file);
+        ~nofilter() override = default;
 
-        virtual dim_t write(const unsigned char *data, dim_t bytes);
-        virtual void flush();
+        dim_t write(const unsigned char *data, dim_t bytes) override;
+        void flush() override;
     };
 
     class zfilter : public filter
@@ -87,11 +87,11 @@ namespace mat
 
         void compress(bool finish);
     public:
-        zfilter(FILE *file, unsigned int level = MAT_ZLEVEL);
-        ~zfilter();
+        explicit zfilter(FILE *file, unsigned int level = MAT_ZLEVEL);
+        ~zfilter() override;
 
-        virtual dim_t write(const unsigned char *data, dim_t bytes);
-        virtual void flush();
+        dim_t write(const unsigned char *data, dim_t bytes) override;
+        void flush() override;
     };
 
     class fwriter
@@ -99,14 +99,14 @@ namespace mat
         FILE *fptr;
         filter *filt;
     public:
-        fwriter(const std::string &path);
+        explicit fwriter(const std::string &path);
         ~fwriter();
 
         template <typename T>
         void addfilter();
         void rmfilter();
 
-        dim_t tellp() const;
+        [[nodiscard]] dim_t tellp() const;
         dim_t seekp(dim_t pos, ios::filepos = ios::beg);
 
         template <typename T, typename U=T>
@@ -124,7 +124,7 @@ namespace mat
     template <typename T>
     void fwriter::addfilter()
     {
-        if (filt) delete filt;
+        delete filt;
         filt = new T(fptr);
     }
 

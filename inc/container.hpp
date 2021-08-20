@@ -46,8 +46,8 @@ namespace mat
          * INPUT:
          *  name (const str::string &) the name of the new container
          */
-        container(const std::string &name);
-        virtual ~container() = 0;
+        explicit container(const std::string &name);
+        ~container() override = 0;
 
         /*
          * mat::container::add(const T &)
@@ -86,7 +86,7 @@ namespace mat
          * mat::container::add(const std::string &, T *, dim_t, const std::vector<dim_t>)
          * 
          * Creates a matrix with the specified name from the passed array and adds it to this
-         * container. The dimensions of this matrix can be explicity specified, but the elements of
+         * container. The dimensions of this matrix can be explicitly specified, but the elements of
          * the dims vector must be commensurate with the number of elements in the matrix. If dims
          * is not specified, the matrix will be a 1D row vector.
          * 
@@ -102,7 +102,7 @@ namespace mat
 
         template <typename T, typename dimtype=dim_t>
 		container &add(const std::string &name, std::initializer_list<T> data, 
-            const std::vector<dimtype> dims = {});
+            const std::vector<dimtype> &dims = {});
 
         /*
          * mat::container::add(const std::string &, T *, dim_t, const std::vector<dim_t>)
@@ -140,7 +140,7 @@ namespace mat
          */
         container &add(const std::string &name, const std::u32string &str);
 
-        virtual void write(fwriter& fw, file_version v) = 0;
+        void write(fwriter& fw, file_version v) override = 0;
     };
 
     inline container::~container() = default;
@@ -170,7 +170,7 @@ namespace mat
 
     template <typename T, typename dimtype>
     container &container::add(const std::string &name, std::initializer_list<T> data, 
-        const std::vector<dimtype> dims)
+        const std::vector<dimtype> &dims)
     {
         add(matrix(name,data,dims));
         return *this;

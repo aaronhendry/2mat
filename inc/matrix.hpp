@@ -61,13 +61,13 @@ namespace mat
          * INPUT:
          *  name (const str::string &) the name of the new element
          */
-		matrix(const std::string &name);
+		explicit matrix(const std::string &name);
 
         /*
          * mat::matrix::matrix(const std::string &, NT, NT)
          * 
          * Constructs a data element using the passed pointer-like arguments. Data is deep-copied 
-         * from the passed pointers. The dimensions of this matrix can be explicity specified, but
+         * from the passed pointers. The dimensions of this matrix can be explicitly specified but
          * the elements of the dims vector must be commensurate with the number of elements in the
          * matrix. If dims is not specified, the matrix will be a 1D row vector.
          * 
@@ -80,7 +80,7 @@ namespace mat
          *  end (NT) a pointer to the end of the data to copy
          */
         template <typename NT, typename dimtype=dim_t>
-		matrix(const std::string &name, NT start, NT end, const std::vector<dimtype> dims = {});
+		matrix(const std::string &name, NT start, NT end, const std::vector<dimtype> &dims = {});
 
         /*
          * mat::matrix::matrix(const std::string &, T *, dim_t)
@@ -98,10 +98,10 @@ namespace mat
          *  numel (dim_t) the number of elements to copy
          */
         template <typename T, typename dimtype=dim_t>
-		matrix(const std::string &name, T *data, dim_t numel, const std::vector<dimtype> dims = {});
+		matrix(const std::string &name, T *data, dim_t numel, const std::vector<dimtype> &dims = {});
 
         template <typename T, typename dimtype=dim_t>
-		matrix(const std::string &name, std::initializer_list<T> data, const std::vector<dimtype> dims = {});
+		matrix(const std::string &name, std::initializer_list<T> data, const std::vector<dimtype> &dims = {});
 
         /*
          * mat::matrix::matrix(const std::string &, const std::string &)
@@ -136,7 +136,7 @@ namespace mat
          *  start (const std::u32string &) the string to construct the element from
          */
         matrix(const std::string &name, const std::u32string &str);
-        ~matrix() = default;
+        ~matrix() override = default;
 
         /*
          * void mat::matrix::write(std::ostream& out, file_version v)
@@ -148,12 +148,12 @@ namespace mat
          *  out (std::ostream &) the stream to output the binary data to
          *  v (file_version) the file format to use
          */
-        virtual void write(fwriter &fw, file_version v);
+        void write(fwriter &fw, file_version v) override;
 
     };
 
     template <typename NT, typename dimtype>
-    matrix::matrix(const std::string &name, NT start, NT end, const std::vector<dimtype> dims)
+    matrix::matrix(const std::string &name, NT start, NT end, const std::vector<dimtype> &dims)
     :
         element(name,start,end),
         _class(get_class(*start)),
@@ -163,24 +163,28 @@ namespace mat
         _logical(false),
         _complex(false)
     {
-        double prod = 1;
+        dimtype prod = 1;
         for (auto d : _dims) prod *= d;
         if (prod != end-start)
             throw mfile_error("Matrix dimensions must be commensurate with number of elements.");
     }
 
+// ignore clang-tidy bug
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "cppcoreguidelines-pro-type-member-init"
     template <typename T, typename dimtype>
-    matrix::matrix(const std::string &name, T *data, dim_t numel, const std::vector<dimtype> dims)
+    matrix::matrix(const std::string &name, T *data, dim_t numel, const std::vector<dimtype> &dims)
     :
         matrix(name,data,data+numel,dims)
     {}
 
     template <typename T, typename dimtype>
     matrix::matrix(const std::string &name, std::initializer_list<T> data,
-        const std::vector<dimtype> dims)
+        const std::vector<dimtype> &dims)
     :
         matrix(name,data.begin(),data.end(),dims)
     {}
+#pragma clang diagnostic pop
 
 }
 

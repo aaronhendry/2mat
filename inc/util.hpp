@@ -52,8 +52,8 @@ namespace mat
     class mfile_error : public std::runtime_error
     {
     public:
-        mfile_error(const std::string &m);
-        ~mfile_error() throw();
+        explicit mfile_error(const std::string &m);
+        ~mfile_error() noexcept override;
     };
 }
 

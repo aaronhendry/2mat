@@ -25,6 +25,7 @@
 #include "container.hpp"
 
 #include <string>
+#include <utility>
 #include <vector>
 #include <cstdint>
 #include <initializer_list>
@@ -40,14 +41,14 @@ namespace mat
         bool open;
         std::string head;
 
-        inline virtual void write(fwriter& fw, file_version v)
+        inline void write(fwriter& fw, file_version v) override
         {
             throw mfile_error("Cannot write file object");
         };
 
     public:
-		file(std::string fname, const std::string &head="Created using 2mat");
-		~file();
+		explicit file(std::string fname, std::string head="Created using 2mat");
+		~file() override;
 
         /*
          * mat::file::header(std::string)
@@ -57,9 +58,9 @@ namespace mat
          * be written as a comment in the root group of the resulting hdf5 file.
          *
          * INPUT:
-         *  head (std::string &) the string to write to the head
+         *  header (std::string &) the string to write to the header
          */
-		void header(const std::string &head);
+		void header(const std::string &header);
 
         /*
          * const std::string &mat::file::header() const
@@ -69,7 +70,7 @@ namespace mat
          * RETURNS:
          *  The header of this file
          */
-		const std::string &header() const;
+		[[nodiscard]] const std::string &header() const;
 
         /*
          * void mat::file::close() const
@@ -90,17 +91,17 @@ namespace mat
     }
 
     template <file_version V>
-    file<V>::file(std::string fname, const std::string &head)
+    file<V>::file(std::string fname, std::string head)
     :
         container(fname),
         open(true),
-        head(head)
+        head(std::move(head))
     {}
 
     template <file_version V>
-    void file<V>::header(const std::string &head)
+    void file<V>::header(const std::string &header)
     {
-        this->head = head;
+        this->head = header;
     }
     
     template <file_version V>

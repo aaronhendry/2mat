@@ -20,8 +20,6 @@
 #include "datenum.hpp"
 #include "date/leap.hpp"
 
-#include <cmath>
-
 namespace mat
 {
 
@@ -97,11 +95,11 @@ namespace mat
     {
         int m, d, H, M;
         double S;
-        doy2md(year,doy,&m,&d);
+        doy2md(year,(int) doy,&m,&d);
         S = doy - ((int)doy);
-        H = S/24;
+        H = (int) (S/24);
         S -= H*24;
-        M = S/1440;
+        M = (int) (S/1440);
         S -= M*1440;
         return julian(year,m,d,H,M,S);
     }
@@ -133,9 +131,9 @@ namespace mat
 
     double tt20002dn(long long tt)
     {
-        double hms = (tt%86400000000000ll)/1000000000ll;
+        auto hms = (double)((tt%86400000000000ll)/1000000000ll); // NOLINT(bugprone-integer-division)
         tt /= 86400000000000ll;
-        double jd = tt + 2451545.0;
+        double jd = (double)tt + 2451545.0;
 
         // Correct for leap seconds
         int i = 0;

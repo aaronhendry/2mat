@@ -27,5 +27,5 @@ namespace mat
         runtime_error(m)
     {}
 
-    mfile_error::~mfile_error() throw(){}
+    mfile_error::~mfile_error() noexcept= default;
 }

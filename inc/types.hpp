@@ -20,7 +20,7 @@
 #ifndef TOO_MAT_TYPES_H
 #define TOO_MAT_TYPES_H
 
-#include <stdint.h>
+#include <cstdint>
 #include <string>
 #include <typeindex>
 #include <unordered_map>

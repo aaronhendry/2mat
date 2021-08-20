@@ -23,6 +23,7 @@
 #include "types.hpp"
 
 #include <cstring>
+#include <utility>
 #include <vector>
 #include <string>
 #include <algorithm>
@@ -55,7 +56,7 @@ namespace mat
          * INPUT:
          *  name (const str::string &) the name of the new element
          */
-		element(const std::string &name);
+		explicit element(std::string name);
 
         /*
          * mat::element::element(const std::string &, NT, NT)
@@ -72,7 +73,7 @@ namespace mat
          *  end (NT) a pointer to the end of the data to copy
          */
         template <typename NT>
-		element(const std::string &name, NT start, NT end);
+		element(std::string name, NT start, NT end);
 
         /*
          * mat::element::element(const std::string &, T *, dim_t)
@@ -100,7 +101,7 @@ namespace mat
          *  name (const str::string &) the name of the new element
          *  str (const std::string &) the string to construct the element from
          */
-        element(const std::string &name, const std::string &str);
+        element(std::string name, const std::string &str);
 
         /*
          * mat::element::element(const std::string &, const std::u16string &)
@@ -111,7 +112,7 @@ namespace mat
          *  name (const str::string &) the name of the new element
          *  start (const std::u16string &) the string to construct the element from
          */
-        element(const std::string &name, const std::u16string &str);
+        element(std::string name, const std::u16string &str);
 
         /*
          * mat::element::element(const std::string &, const std::u32string &)
@@ -122,7 +123,7 @@ namespace mat
          *  name (const str::string &) the name of the new element
          *  start (const std::u32string &) the string to construct the element from
          */
-        element(const std::string &name, const std::u32string &str);
+        element(std::string name, const std::u32string &str);
 		virtual ~element() = default;
 
         /*
@@ -133,7 +134,7 @@ namespace mat
          * RETURN:
          *  The name of this element
          */
-        const std::string &name() const;
+        [[nodiscard]] const std::string &name() const;
 
         /*
          * datatype mat::element::type() const
@@ -166,10 +167,10 @@ namespace mat
     }
 
     template <typename NT>
-    element::element(const std::string &name, NT start, NT end)
+    element::element(std::string name, NT start, NT end)
     :
         _type(get_datatype(*start)),
-        _name(name)
+        _name(std::move(name))
     {
         dim_t n = (end-start)*sizeof(*start);
         _data = std::make_shared<std::vector<unsigned char>>(n);
