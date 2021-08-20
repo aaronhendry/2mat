@@ -16,4 +16,4 @@ add_library(2mat
         src/v7/write.cpp
         src/v7_3/write.cpp)
 
-target_include_directories(2mat PUBLIC inc/)
+target_include_directories(2mat PUBLIC ${CMAKE_SOURCE_DIR}/inc)
