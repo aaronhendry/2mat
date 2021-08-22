@@ -113,7 +113,7 @@ namespace mat
         template <typename T, typename U=T>
         dim_t write_n(T val, dim_t n);
         template <typename T, typename U=T>
-        dim_t write(T *ptr, dim_t n);
+        dim_t write(const T *ptr, dim_t n);
         dim_t write(const std::string &str);
 
         void close();
@@ -158,12 +158,12 @@ namespace mat
     }
 
     template <typename T, typename U>
-    dim_t fwriter::write(T *ptr, dim_t n)
+    dim_t fwriter::write(const T *ptr, dim_t n)
     {
         if (!fptr) throw mfile_error("Cannot write to closed file");
         if (std::is_same<T,U>::value)
         {
-            return filt->write((unsigned char *)ptr,n*sizeof(T));
+            return filt->write((unsigned    char *)ptr,n*sizeof(T));
         }
         U val;
         for (unsigned int i = 0; i < n; ++i)
