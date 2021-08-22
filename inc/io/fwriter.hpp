@@ -79,11 +79,10 @@ namespace mat
     class zfilter : public filter
     {
         unsigned char *bptr, *bend;
-        unsigned int level;
-        unsigned char buffer[MAT_ZCHUNK];
-        unsigned char zbuffer[MAT_ZCHUNK];
+        unsigned char buffer[MAT_ZCHUNK]{};
+        unsigned char zbuffer[MAT_ZCHUNK]{};
 
-        z_stream strm;
+        z_stream strm{};
 
         void compress(bool finish);
     public:

@@ -44,8 +44,7 @@ namespace mat
     :
         filter(file),
         bptr(buffer),
-        bend(buffer+MAT_ZCHUNK),
-        level(level)
+        bend(buffer+MAT_ZCHUNK)
     {
 
         strm.zalloc = Z_NULL;
@@ -58,7 +57,7 @@ namespace mat
 
     zfilter::~zfilter()
     {
-        flush();
+        zfilter::flush();
         deflateEnd(&strm);
     }
 
@@ -120,7 +119,7 @@ namespace mat
 
     void fwriter::rmfilter()
     {
-        if (filt) delete filt;
+        delete filt;
         filt = new nofilter(fptr);
     }
 
@@ -133,7 +132,7 @@ namespace mat
     {
         if (!fptr) throw mfile_error("Cannot seek closed file");
         filt->flush();
-        return fseek(fptr,pos,whence);
+        return fseek(fptr,(long) pos,whence);
     }
 
     dim_t fwriter::write(const std::string &str)
@@ -144,11 +143,11 @@ namespace mat
 
     void fwriter::close()
     {
-        if (filt) delete filt;
-        filt = NULL;
+        delete filt;
+        filt = nullptr;
         if (!fptr) return;
         fclose(fptr);
-        fptr = NULL;
+        fptr = nullptr;
     }
 
 }
