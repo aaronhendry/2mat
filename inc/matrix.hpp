@@ -42,10 +42,10 @@ namespace mat
     class matrix : public element
     {
     private:
-        array_class _class;
+        array_class _class = mxUNKNOWN_CLASS;
         std::vector<dim_t> _dims;
-        bool _logical;
-        bool _complex;
+        bool _logical = false;
+        bool _complex = false;
 
         template <file_version V>
         void write(fwriter& fw);
@@ -169,9 +169,6 @@ namespace mat
             throw mfile_error("Matrix dimensions must be commensurate with number of elements.");
     }
 
-// ignore clang-tidy bug
-#pragma clang diagnostic push
-#pragma ide diagnostic ignored "cppcoreguidelines-pro-type-member-init"
     template <typename T, typename dimtype>
     matrix::matrix(const std::string &name, T *data, dim_t numel, const std::vector<dimtype> &dims)
     :
@@ -184,7 +181,6 @@ namespace mat
     :
         matrix(name,data.begin(),data.end(),dims)
     {}
-#pragma clang diagnostic pop
 
 }
 

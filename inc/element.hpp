@@ -37,7 +37,7 @@ namespace mat
     class element
     {
     protected:
-        datatype _type;
+        datatype _type = miUNKNOWN;
         std::string _name;
         std::shared_ptr<std::vector<unsigned char>> _data;
 
@@ -89,7 +89,7 @@ namespace mat
          *  numel (dim_t) the number of elements to copy
          */
         template <typename T>
-		element(const std::string &name, T *data, dim_t numel);
+		element(std::string name, T *data, dim_t numel);
 
         /*
          * mat::element::element(const std::string &, const std::string &)
@@ -144,7 +144,7 @@ namespace mat
          * RETURN:
          *  The name of this element
          */
-        datatype type() const;
+        [[nodiscard]] datatype type() const;
 
         /*
          * void mat::element::write(std::ostream& out, file_version v)
@@ -178,7 +178,7 @@ namespace mat
     }
 
     template <typename T>
-    element::element(const std::string &name, T *data, dim_t numel)
+    element::element(std::string name, T *data, dim_t numel)
     :
         element(name,data,data+numel)
     {}
