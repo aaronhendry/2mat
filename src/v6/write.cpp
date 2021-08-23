@@ -117,7 +117,7 @@ namespace mat
         fw.write<uint32_t>(0);
 
         // Dimensions
-        fw.write<uint32_t>(miUINT32);
+        fw.write<uint32_t>(miINT32);
         fw.write<uint32_t>(8);
         fw.write<uint32_t>(1);
         fw.write<uint32_t>(1);
