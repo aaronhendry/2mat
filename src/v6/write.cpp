@@ -134,15 +134,16 @@ namespace mat
             fw.write_n<char>(0,ceil8(n)-n);
         }
 
-        // Field names
-        fw.write<uint16_t>(4);
-        fw.write<uint16_t>(miINT32);
-        fw.write<int32_t>(32);
-        fw.write<uint32_t>(miINT8);
-        fw.write<uint32_t>(_children.size()*32);
+        // Field names;
         dim_t namesz = 0;
         for (auto &elem : _children) namesz = std::max((size_t) namesz, elem->name().size() + 1);
-        n = std::min(namesz, 63ull);
+        namesz = std::min(namesz, 63ull);
+
+        fw.write<uint16_t>(4);
+        fw.write<uint16_t>(miINT32);
+        fw.write<int32_t>((int32_t)namesz);
+        fw.write<uint32_t>(miINT8);
+        fw.write<uint32_t>(_children.size()*namesz);
 
         for (auto &elem : _children)
         {
