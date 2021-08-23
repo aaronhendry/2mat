@@ -150,7 +150,7 @@ namespace mat
     template <typename T>
     container &container::add(const T &child)
     {
-        _children.push_back(std::unique_ptr<element>(new T(child)));
+        _children.push_back(std::shared_ptr<element>(new T(child)));
         return *this;
     }
 
