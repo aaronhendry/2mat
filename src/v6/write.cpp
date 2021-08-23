@@ -88,8 +88,8 @@ namespace mat
         n = _data->size();
         if (n <= 4)
         {
-            fw.write<uint16_t>(n);
             fw.write<uint16_t>(_type);
+            fw.write<uint16_t>(n);
             fw.write<unsigned char>(ptr(),n);
             fw.write_n<char>(0,4-n);
         } else {
