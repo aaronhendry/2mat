@@ -83,6 +83,9 @@ namespace mat
                 fw.write<char>(&_name[0],n);
                 fw.write_n<char>(0,ceil8(n)-n);
             }
+        } else {
+            fw.write<uint32_t>(miINT8);
+            fw.write<uint32_t>(0);
         }
 
         n = _data->size();
@@ -120,19 +123,26 @@ namespace mat
         fw.write<uint32_t>(1);
 
         // Name
-        n = _name.size();
-        if (n <= 4)
+        if (write_name)
         {
-            fw.write<uint16_t>(n);
-            fw.write<uint16_t>(miINT8);
-            fw.write<char>(&_name[0],n);
-            fw.write_n<char>(0,4-n);
+            n = _name.size();
+            if (n <= 4)
+            {
+                fw.write<uint16_t>(n);
+                fw.write<uint16_t>(miINT8);
+                fw.write<char>(&_name[0],n);
+                fw.write_n<char>(0,4-n);
+            } else {
+                fw.write<uint32_t>(miINT8);
+                fw.write<uint32_t>(n);
+                fw.write<char>(&_name[0],n);
+                fw.write_n<char>(0,ceil8(n)-n);
+            }
         } else {
             fw.write<uint32_t>(miINT8);
-            fw.write<uint32_t>(n);
-            fw.write<char>(&_name[0],n);
-            fw.write_n<char>(0,ceil8(n)-n);
+            fw.write<uint32_t>(0);
         }
+
 
         // Field names;
         dim_t namesz = 0;
