@@ -79,7 +79,7 @@ namespace mat
          *  dims (const std::vector<dim_t> &) the dimensions of the matrix
          */
         template <typename NT, typename dimtype=dim_t>
-		container &add(const std::string &name, NT start, NT end, 
+		container &add(const std::string &name, NT start, NT end,
             const std::vector<dimtype> &dims = {});
 
         /*
@@ -101,7 +101,7 @@ namespace mat
             const std::vector<dimtype> &dims = {});
 
         template <typename T, typename dimtype=dim_t>
-		container &add(const std::string &name, std::initializer_list<T> data, 
+		container &add(const std::string &name, std::initializer_list<T> data,
             const std::vector<dimtype> &dims = {});
 
         /*
@@ -114,7 +114,7 @@ namespace mat
          *  name (const str::string &) the name of the new matrix
          *  str (const std::string &) the string to add
          */
-        container &add(const std::string &name, const std::string &str);
+        virtual container &add(const std::string &name, const std::string &str);
 
         /*
          * mat::container::add(const std::string &, T *, dim_t, const std::vector<dim_t>)
@@ -126,7 +126,7 @@ namespace mat
          *  name (const str::string &) the name of the new matrix
          *  str (const std::string &) the UTF-16 string to add
          */
-        container &add(const std::string &name, const std::u16string &str);
+        virtual container &add(const std::string &name, const std::u16string &str);
 
         /*
          * mat::container::add(const std::string &, T *, dim_t, const std::vector<dim_t>)
@@ -138,7 +138,7 @@ namespace mat
          *  name (const str::string &) the name of the new matrix
          *  str (const std::string &) the UTF-32 string to add
          */
-        container &add(const std::string &name, const std::u32string &str);
+        virtual container &add(const std::string &name, const std::u32string &str);
 
         [[nodiscard]] dim_t size(bool with_name) const override = 0;
 

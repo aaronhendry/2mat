@@ -57,4 +57,44 @@ namespace mat
         }
     }
 
+    mstruct &mstruct::add(const std::string &name, const std::string &str)
+    {
+        container::add(name,str);
+        return *this;
+    }
+    mstruct &mstruct::add(const std::string &name, const std::u16string &str)
+    {
+        container::add(name,str);
+        return *this;
+    }
+    mstruct &mstruct::add(const std::string &name, const std::u32string &str)
+    {
+        container::add(name,str);
+        return *this;
+    }
+
+    template<typename T>
+    mstruct &mstruct::add(const T &c) {
+        container::add<T>(c);
+        return *this;
+    }
+
+    template<typename NT, typename dimtype>
+    mstruct &mstruct::add(const std::string &name, NT start, NT end, const std::vector<dimtype> &dims) {
+        container::add<NT,dimtype>(name,start,end,dims);
+        return *this;
+    }
+
+    template<typename T, typename dimtype>
+    mstruct &mstruct::add(const std::string &name, T *data, dim_t numel, const std::vector<dimtype> &dims) {
+        container::add<T,dimtype>(name,data,numel,dims);
+        return *this;
+    }
+
+    template<typename T, typename dimtype>
+    mstruct &mstruct::add(const std::string &name, std::initializer_list<T> data, const std::vector<dimtype> &dims) {
+        container::add<T,dimtype>(name,data,dims);
+        return *this;
+    }
+
 }

@@ -36,6 +36,25 @@ namespace mat
 
         [[nodiscard]] dim_t size(bool with_name = true) const override;
 
+        template <typename T>
+        mstruct &add(const T &c);
+
+        template <typename NT, typename dimtype=dim_t>
+		mstruct &add(const std::string &name, NT start, NT end,
+            const std::vector<dimtype> &dims = {});
+
+        template <typename T, typename dimtype=dim_t>
+		mstruct &add(const std::string &name, T *data, dim_t numel,
+            const std::vector<dimtype> &dims = {});
+
+        template <typename T, typename dimtype=dim_t>
+		mstruct &add(const std::string &name, std::initializer_list<T> data,
+            const std::vector<dimtype> &dims = {});
+
+        mstruct &add(const std::string &name, const std::string &str) override;
+        mstruct &add(const std::string &name, const std::u16string &str) override;
+        mstruct &add(const std::string &name, const std::u32string &str) override;
+
         /*
          * void mat::mstruct::write(std::ostream& out, file_version v)
          *
