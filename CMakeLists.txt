@@ -29,5 +29,8 @@ set(HEADERS
         inc/types.hpp
         inc/util.hpp)
 
+# Prevents annoying compiler note
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-psabi ")
+
 add_library(2mat ${SOURCES} ${HEADERS})
 target_include_directories(2mat PUBLIC ${CMAKE_SOURCE_DIR}/inc)
