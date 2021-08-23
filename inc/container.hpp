@@ -34,7 +34,7 @@ namespace mat
     class container : public element
     {
     protected:
-        std::vector<std::unique_ptr<element>> _children;
+        std::vector<std::shared_ptr<element>> _children;
     public:
         /*
          * mat::container::container(const std::string &)
