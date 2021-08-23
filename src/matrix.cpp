@@ -72,8 +72,8 @@ namespace mat
     {}
 
     dim_t matrix::size(bool with_name) const {
-        dim_t size = 40 + ceil8(_dims.size()*4) + (_data->size()<=4? 0 : ceil8(_data->size()));
-        if (with_name) size += 8 + _name.size() > 4 ? ceil8(_name.size()) : 0;
+        dim_t size = 32 + ceil8(_dims.size()*4) + (_data->size()<=4? 0 : ceil8(_data->size()));
+        if (with_name) size += 8 + (_name.size() > 4 ? ceil8(_name.size()) : 0);
         return size;
     }
 
