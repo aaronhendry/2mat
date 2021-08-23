@@ -148,8 +148,8 @@ namespace mat
         for (auto &elem : _children) namesz = std::max((size_t) namesz, elem->name().size() + 1);
         namesz = std::min(namesz, 63ull);
 
-        fw.write<uint16_t>(4);
         fw.write<uint16_t>(miINT32);
+        fw.write<uint16_t>(4);
         fw.write<int32_t>((int32_t)namesz);
         fw.write<uint32_t>(miINT8);
         fw.write<uint32_t>(_children.size()*namesz);
