@@ -55,7 +55,7 @@ namespace mat
     {
         unsigned int n;
         fw.write<uint32_t>(miMATRIX);
-        fw.write<uint32_t>(size());
+        fw.write<uint32_t>(size(write_name));
         fw.write<uint32_t>(miUINT32);
         fw.write<uint32_t>(8);
         fw.write<uint32_t>(((_logical*0x02+_complex*0x08)<<8) + _class);
@@ -110,7 +110,7 @@ namespace mat
         // Write header
 
         fw.write<uint32_t>(miMATRIX);
-        fw.write<uint32_t>(size());
+        fw.write<uint32_t>(size(write_name));
         fw.write<uint32_t>(miUINT32);
         fw.write<uint32_t>(8);
         fw.write<uint32_t>(mxSTRUCT_CLASS);
