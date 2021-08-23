@@ -140,12 +140,16 @@ namespace mat
         fw.write<int32_t>(32);
         fw.write<uint32_t>(miINT8);
         fw.write<uint32_t>(_children.size()*32);
+        dim_t namesz = 0;
+        for (auto &elem : _children) namesz = std::max((dim_t) namesz, elem->name().size() + 1);
+        n = std::min(namesz, 63ull);
+
         for (auto &elem : _children)
         {
-            auto name = elem->name().substr(0,31);
+            auto name = elem->name().substr(0,namesz);
             n = name.size();
-            fw.write<char>(&name[0],n);
-            fw.write_n<char>(0,32-n);
+            fw.write<char>(&name[0],n); 
+            fw.write_n<char>(0,namesz-n);
         }
 
         for (auto &elem : _children)
