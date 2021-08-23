@@ -147,6 +147,14 @@ namespace mat
         [[nodiscard]] datatype type() const;
 
         /*
+         * void mat::element::size() const
+         *
+         * Calculates the size, in bytes, of this element
+         *
+         */
+        [[nodiscard]] virtual dim_t size(bool with_name) const = 0;
+
+        /*
          * void mat::element::write(std::ostream& out, file_version v)
          * 
          * Writes the data in this element to the given output stream, in accordance with the file
@@ -156,7 +164,7 @@ namespace mat
          *  out (std::ostream &) the stream to output the binary data to
          *  v (file_version) the file format to use
          */
-        virtual void write(fwriter &fw, file_version v) = 0;
+        virtual void write(fwriter &fw, file_version v, bool write_name = true) = 0;
 
     };
 

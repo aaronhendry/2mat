@@ -20,6 +20,7 @@
 #include "io/fwriter.hpp"
 #include "file.hpp"
 #include "matrix.hpp"
+#include "mstruct.hpp"
 #include "util.hpp"
 
 #include <fstream>
@@ -50,16 +51,14 @@ namespace mat
     }
 
     template <>
-    void matrix::write<V6>(fwriter &fw)
+    void matrix::write<V6>(fwriter &fw, bool write_name)
     {
         unsigned int n;
-        dim_t size = 40 + (_name.size()<=4? 0 : ceil8(_name.size())) + ceil8(_dims.size()*4)
-            +            (_data->size()<=4? 0 : ceil8(_data->size()));
         fw.write<uint32_t>(miMATRIX);
-        fw.write<uint32_t>(size);
+        fw.write<uint32_t>(size());
         fw.write<uint32_t>(miUINT32);
         fw.write<uint32_t>(8);
-        fw.write<uint32_t>(((_logical*0x02+_complex*0x08)<<8) + _class);
+        fw.write<uint32_t>(((_logical*0x02+_complex*0x08)<<8) + mxSTRUCT_CLASS);
         fw.write<uint32_t>(0);
 
         n = _dims.size();
@@ -69,6 +68,50 @@ namespace mat
         n *= 4;
         fw.write_n<char>(0,ceil8(n)-n);
 
+        if (write_name)
+        {
+            n = _name.size();
+            if (n <= 4)
+            {
+                fw.write<uint16_t>(n);
+                fw.write<uint16_t>(miINT8);
+                fw.write<char>(&_name[0],n);
+                fw.write_n<char>(0,4-n);
+            } else {
+                fw.write<uint32_t>(miINT8);
+                fw.write<uint32_t>(n);
+                fw.write<char>(&_name[0],n);
+                fw.write_n<char>(0,ceil8(n)-n);
+            }
+        }
+
+        n = _data->size();
+        fw.write<uint32_t>(_type);
+        fw.write<uint32_t>(n);
+        fw.write<unsigned char>(ptr(),n);
+        fw.write_n<char>(0,ceil8(n)-n);
+    }
+
+    template <>
+    void mstruct::write<V6>(fwriter &fw, bool write_name)
+    {
+        unsigned int n;
+        // Write header
+
+        fw.write<uint32_t>(miMATRIX);
+        fw.write<uint32_t>(size());
+        fw.write<uint32_t>(miUINT32);
+        fw.write<uint32_t>(8);
+        fw.write<uint32_t>(mxSTRUCT_CLASS);
+        fw.write<uint32_t>(0);
+
+        // Dimensions
+        fw.write<uint32_t>(miUINT32);
+        fw.write<uint32_t>(8);
+        fw.write<uint32_t>(1);
+        fw.write<uint32_t>(1);
+
+        // Name
         n = _name.size();
         if (n <= 4)
         {
@@ -82,11 +125,25 @@ namespace mat
             fw.write<char>(&_name[0],n);
             fw.write_n<char>(0,ceil8(n)-n);
         }
-        n = _data->size();
-        fw.write<uint32_t>(_type);
-        fw.write<uint32_t>(n);
-        fw.write<unsigned char>(ptr(),n);
-        fw.write_n<char>(0,ceil8(n)-n);
+
+        // Field names
+        fw.write<uint16_t>(4);
+        fw.write<uint16_t>(miINT32);
+        fw.write<int32_t>(32);
+        fw.write<uint32_t>(miINT8);
+        fw.write<uint32_t>(_children.size()*32);
+        for (auto &elem : _children)
+        {
+            auto name = elem->name().substr(0,31);
+            n = name.size();
+            fw.write<char>(&name[0],n);
+            fw.write_n<char>(0,32-n);
+        }
+
+        for (auto &elem : _children)
+        {
+            elem->write(fw, V6, false);
+        }
     }
 
     template <>

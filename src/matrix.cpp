@@ -71,18 +71,23 @@ namespace mat
         _complex(false)
     {}
 
-    void matrix::write(fwriter& fw, file_version v)
+    dim_t matrix::size(bool with_name) const {
+        dim_t size = 32 + ceil8(_dims.size()*4) + (_data->size()<=4? 0 : ceil8(_data->size()));
+        if (with_name) size += 8 + _name.size() > 4 ? ceil8(_name.size()) : 0;
+        return size;
+    }
+
+    void matrix::write(fwriter& fw, file_version v, bool write_name)
     {
         switch(v)
         {
+            // Writing for V6 and V7 is the same -- only the compression at the end differs
             case V6:
-                write<V6>(fw);
-                return;
             case V7:
-                write<V7>(fw);
+                write<V6>(fw, write_name);
                 return;
             case V7_3:
-                write<V7_3>(fw);
+                write<V7_3>(fw, write_name);
                 return;
         }
     }

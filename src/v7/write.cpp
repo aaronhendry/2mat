@@ -50,46 +50,6 @@ namespace mat
     }
 
     template <>
-    void matrix::write<V7>(fwriter &fw)
-    {
-        unsigned int n;
-        dim_t size = 40 + (_name.size()<=4? 0 : ceil8(_name.size())) + ceil8(_dims.size()*4)
-            +            (_data->size()<=4? 0 : ceil8(_data->size()));
-        fw.write<uint32_t>(miMATRIX);
-        fw.write<uint32_t>(size);
-        fw.write<uint32_t>(miUINT32);
-        fw.write<uint32_t>(8);
-        fw.write<uint32_t>(((_logical*0x02+_complex*0x08)<<8) + _class);
-        fw.write<uint32_t>(0);
-
-        n = _dims.size();
-        fw.write<uint32_t>(miUINT32);
-        fw.write<uint32_t>(n*4);
-        fw.write<dim_t,uint32_t>(&_dims[0],n);
-        n *= 4;
-        fw.write_n<char>(0,ceil8(n)-n);
-
-        n = _name.size();
-        if (n <= 4)
-        {
-            fw.write<uint16_t>(n);
-            fw.write<uint16_t>(miINT8);
-            fw.write<char>(&_name[0],n);
-            fw.write_n<char>(0,4-n);
-        } else {
-            fw.write<uint32_t>(miINT8);
-            fw.write<uint32_t>(n);
-            fw.write<char>(&_name[0],n);
-            fw.write_n<char>(0,ceil8(n)-n);
-        }
-        n = _data->size();
-        fw.write<uint32_t>(_type);
-        fw.write<uint32_t>(n);
-        fw.write<unsigned char>(ptr(),n);
-        fw.write_n<char>(0,ceil8(n)-n);
-    }
-
-    template <>
     void file<V7>::close()
     {
         if (_children.empty()) return;

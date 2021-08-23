@@ -31,7 +31,12 @@ namespace mat
 {
 
     template <>
-    void matrix::write<V7_3>(fwriter &fw)
+    void matrix::write<V7_3>(fwriter &fw, bool write_name)
+    {
+    }
+
+    template <>
+    void mstruct::write<V7_3>(fwriter &fw, bool write_name)
     {
     }
 

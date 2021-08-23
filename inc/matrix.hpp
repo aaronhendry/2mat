@@ -48,7 +48,7 @@ namespace mat
         bool _complex = false;
 
         template <file_version V>
-        void write(fwriter& fw);
+        void write(fwriter& fw, bool write_name);
     public:        
         /*
          * mat::matrix::matrix(const std::string &)
@@ -139,6 +139,14 @@ namespace mat
         ~matrix() override = default;
 
         /*
+         * void mat::matrix::size() const
+         *
+         * Calculates the size, in bytes, of this element
+         *
+         */
+        [[nodiscard]] dim_t size(bool with_name = true) const override;
+
+        /*
          * void mat::matrix::write(std::ostream& out, file_version v)
          * 
          * Writes the data in this matrix to the given output stream, in accordance with the file
@@ -147,8 +155,9 @@ namespace mat
          * INPUT:
          *  out (std::ostream &) the stream to output the binary data to
          *  v (file_version) the file format to use
+         *  write_name (bool) whether to write the name
          */
-        void write(fwriter &fw, file_version v) override;
+        void write(fwriter &fw, file_version v, bool write_name = true) override;
 
     };
 

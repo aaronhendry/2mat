@@ -29,38 +29,24 @@ namespace mat
     {
 
         template <file_version V>
-        void write(fwriter& fw);
+        void write(fwriter& fw, bool write_name);
     public:
-		mstruct(std::string name);
-		~mstruct();
+		explicit mstruct(const std::string& name);
+		~mstruct() override = default;
 
-        //TODO: Add struct methods
+        [[nodiscard]] dim_t size(bool with_name = true) const override;
 
         /*
-         * void mat::matrix::write(std::ostream& out, file_version v)
-         * 
-         * Writes the data in this matrix to the given output stream, in accordance with the file
+         * void mat::mstruct::write(std::ostream& out, file_version v)
+         *
+         * Writes the data in this mstruct to the given output stream, in accordance with the file
          * version specified.
-         * 
+         *
          * INPUT:
          *  out (std::ostream &) the stream to output the binary data to
          *  v (file_version) the file format to use
          */
-        inline void write(fwriter& fw, file_version v) override
-        {
-            switch(v)
-            {
-                case V6:
-                    write<V6>(fw);
-                    return;
-                case V7:
-                    write<V7>(fw);
-                    return;
-                case V7_3:
-                    write<V7_3>(fw);
-                    return;
-            }
-        }
+        void write(fwriter &fw, file_version v, bool write_name = true) override;
     };
 
 }

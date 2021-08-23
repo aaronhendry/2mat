@@ -41,9 +41,14 @@ namespace mat
         bool open;
         std::string head;
 
-        inline void write(fwriter& fw, file_version v) override
+        inline void write(fwriter&, file_version, bool) override
         {
             throw mfile_error("Cannot write file object");
+        };
+
+        [[nodiscard]] inline dim_t size(bool) const override
+        {
+            throw mfile_error("Cannot get size of file object");
         };
 
     public:

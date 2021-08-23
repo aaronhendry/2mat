@@ -140,7 +140,9 @@ namespace mat
          */
         container &add(const std::string &name, const std::u32string &str);
 
-        void write(fwriter& fw, file_version v) override = 0;
+        [[nodiscard]] dim_t size(bool with_name) const override = 0;
+
+        void write(fwriter& fw, file_version v, bool write_name) override = 0;
     };
 
     inline container::~container() = default;
