@@ -73,8 +73,8 @@ namespace mat
             n = _name.size();
             if (n <= 4)
             {
-                fw.write<uint16_t>(n);
                 fw.write<uint16_t>(miINT8);
+                fw.write<uint16_t>(n);
                 fw.write<char>(&_name[0],n);
                 fw.write_n<char>(0,4-n);
             } else {
