@@ -143,7 +143,6 @@ namespace mat
             fw.write<uint32_t>(0);
         }
 
-
         // Field names;
         dim_t namesz = 0;
         for (auto &elem : _children) namesz = std::max((size_t) namesz, elem->name().size() + 1);

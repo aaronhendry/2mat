@@ -30,10 +30,15 @@ namespace mat
 
     [[nodiscard]] dim_t mstruct::size(bool with_name) const
     {
-        dim_t size = 64;
+        dim_t size = 56;
         if (with_name) size += _name.size()> 4 ? ceil8(_name.size()) : 0;
 
-        for (auto &elem : _children) size += 72 + elem->size(false);
+        // Calculate field name size
+        dim_t namesz = 0;
+        for (auto &elem : _children) namesz = std::max((size_t) namesz, elem->name().size() + 1);
+        size += ceil8(std::min(namesz, 63ull) * _children.size());
+
+        for (auto &elem : _children) size += elem->size(false)+8; // Plus 8 for the element headers
         return size;
     }
 
