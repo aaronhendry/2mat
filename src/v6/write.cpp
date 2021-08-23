@@ -58,11 +58,11 @@ namespace mat
         fw.write<uint32_t>(size());
         fw.write<uint32_t>(miUINT32);
         fw.write<uint32_t>(8);
-        fw.write<uint32_t>(((_logical*0x02+_complex*0x08)<<8) + mxSTRUCT_CLASS);
+        fw.write<uint32_t>(((_logical*0x02+_complex*0x08)<<8) + _class);
         fw.write<uint32_t>(0);
 
         n = _dims.size();
-        fw.write<uint32_t>(miUINT32);
+        fw.write<uint32_t>(miINT32);
         fw.write<uint32_t>(n*4);
         fw.write<dim_t,uint32_t>(&_dims[0],n);
         n *= 4;
