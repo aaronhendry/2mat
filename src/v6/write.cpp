@@ -152,6 +152,7 @@ namespace mat
             fw.write<char>(&name[0],n);
             fw.write_n<char>(0,namesz-n);
         }
+        fw.write_n<char>(0, ceil8(_children.size()*namesz) - _children.size()*namesz);
 
         for (auto &elem : _children)
         {
